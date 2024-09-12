@@ -3,8 +3,18 @@ name: Tylers Build and release container
 on:
   workflow_dispatch:
   push:
-    tags:
-      - "deploy"
+    branches:
+      - "master"
+    paths-ignore:
+      - "*.md"
+      - LICENCE
+      - TRANSLATION
+      - invidious.service
+      - .git*
+      - .editorconfig
+      - screenshots/*
+      - .github/ISSUE_TEMPLATE/*
+      - kubernetes/**
 
 jobs:
   release:
