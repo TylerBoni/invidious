@@ -1,4 +1,4 @@
-name: Build and release container
+name: Tyler's Build and release container
 
 on:
   workflow_dispatch:
