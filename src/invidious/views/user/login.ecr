@@ -65,7 +65,11 @@
                             <% end %>
                         <% else %>
                             <button type="submit" name="action" value="signin" class="pure-button pure-button-primary">
+                                <% if login_only %>
+                                    <%= translate(locale, "Sign In") %>
+                                <% else %>
                                 <%= translate(locale, "Sign In") %>/<%= translate(locale, "Register") %>
+                                <% end %>
                             </button>
                         <% end %>
                     </fieldset>

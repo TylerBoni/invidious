@@ -13,6 +13,7 @@ module Invidious::Routes::Login
     if !CONFIG.login_enabled
       return error_template(400, "Login has been disabled by administrator.")
     end
+    login_only = CONFIG.login_only
 
     email = nil
     password = nil
@@ -35,6 +36,7 @@ module Invidious::Routes::Login
     if !CONFIG.login_enabled
       return error_template(403, "Login has been disabled by administrator.")
     end
+    login_only = CONFIG.login_only
 
     # https://stackoverflow.com/a/574698
     email = env.params.body["email"]?.try &.downcase.byte_slice(0, 254)
