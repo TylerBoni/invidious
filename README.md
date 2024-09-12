@@ -1,3 +1,5 @@
+A fork of the Invidious project with a focus on hosting private instances.
+
 <div align="center">
   <img src="assets/invidious-colored-vector.svg" width="192" height="192" alt="Invidious logo">
   <h1>Invidious</h1>
