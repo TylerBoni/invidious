@@ -31,6 +31,7 @@ services:
         # https_only: false
         # statistics_enabled: false
         login_only: true
+        allow_local_guest: true
         hmac_key: $HMAC_KEY
     healthcheck:
       test: wget -nv --tries=1 --spider http://127.0.0.1:3000/api/v1/trending || exit 1

@@ -1,7 +1,21 @@
 {% skip_file if flag?(:api_only) %}
+LOCAL_NETWORK_IP_RANGES = [
+  /^127\.0\.0\.1$/,                                  # Loopback
+  /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/,                 # 10.x.x.x
+  /^192\.168\.\d{1,3}\.\d{1,3}$/,                    # 192.168.x.x
+  /^172\.(1[6-9]|2[0-9]|3[0-1])\.\d{1,3}\.\d{1,3}$/, # 172.16.x.x - 172.31.x.x
+]
 
 module Invidious::Routes::Login
   def self.login_page(env)
+    user_ip = ""
+    env.request.headers.each do |key, value|
+      puts "#{key}: #{value}"
+    end
+    puts "User IP: #{user_ip}"
+    is_local_user = LOCAL_NETWORK_IP_RANGES.any? { |regex| user_ip =~ regex }
+    login_only = !CONFIG.login_only ? false : (CONFIG.allow_local_guest ? !is_local_user : false)
+    
     locale = env.get("preferences").as(Preferences).locale
 
     user = env.get? "user"
@@ -13,7 +27,6 @@ module Invidious::Routes::Login
     if !CONFIG.login_enabled
       return error_template(400, "Login has been disabled by administrator.")
     end
-    login_only = CONFIG.login_only
 
     email = nil
     password = nil
@@ -29,6 +42,14 @@ module Invidious::Routes::Login
   end
 
   def self.login(env)
+    user_ip = ""
+    puts "User IP: #{user_ip}"
+    env.request.headers.each do |key, value|
+      puts "#{key}: #{value}"
+    end
+    is_local_user = LOCAL_NETWORK_IP_RANGES.any? { |regex| user_ip =~ regex }
+    login_only = !CONFIG.login_only ? false : (CONFIG.allow_local_guest ? !is_local_user : false)
+
     locale = env.get("preferences").as(Preferences).locale
 
     referer = get_referer(env, "/feed/subscriptions")
@@ -36,7 +57,6 @@ module Invidious::Routes::Login
     if !CONFIG.login_enabled
       return error_template(403, "Login has been disabled by administrator.")
     end
-    login_only = CONFIG.login_only
 
     # https://stackoverflow.com/a/574698
     email = env.params.body["email"]?.try &.downcase.byte_slice(0, 254)
